@@ -111,7 +111,7 @@ class Multi_VAE(pl.LightningModule):
             mu_zx,
             logvar_zx,
             weight = mask,
-            zero_weight = self.zero_weight
+            #zero_weight = self.zero_weight
         )
         
         loss = self.beta_sch * KLD - reco_mol - self.alpha * reco_lat
@@ -154,7 +154,7 @@ class Multi_VAE(pl.LightningModule):
             mu_zx,
             logvar_zx,
             weight = self.w,
-            zero_weight = self.zero_weight
+            #zero_weight = self.zero_weight
         )
         loss = self.beta * KLD - reco_mol - self.alpha * reco_lat
         mol_from_prop, _ = self.decode(mu_zy)
