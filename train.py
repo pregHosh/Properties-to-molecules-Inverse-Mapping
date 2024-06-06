@@ -32,7 +32,6 @@ torch.set_default_dtype(torch.float32)
 #  'dimension'
 #     ]
 
-
 reproduce_paper = True
 
 if reproduce_paper:
@@ -40,8 +39,9 @@ if reproduce_paper:
 else:
     paper_path = ''
 
+path  = "dati/data/"
 data = Data_Handler(
-    folder_path='./data{}/data/'.format(paper_path)
+    folder_path=path
 )
 
 # if data is not initialized in other script put some arguments like these
@@ -62,21 +62,23 @@ data = Data_Handler(
 # w = .27*w/w.max()#
 # w = 0.*torch.ones_like(torch.tensor(w.tolist()))
 
+
 datasets_dict, p_means, p_stds = data.load_datas_from_files()
 
 training_set = datasets_dict['train_dataset']
+print(training_set[0])
 validation_set = datasets_dict['val_dataset']
 batch_size = 500
 train_loader = DataLoader(training_set, batch_size = batch_size, shuffle = True)
 valid_loader = DataLoader(validation_set, batch_size = int(len(validation_set)), shuffle = True)
 
 checkpoint_callback = ModelCheckpoint(dirpath="checkpoints/", save_top_k=2, monitor="proptomol", save_last = True)
-
+paper_path = "dati/data"
 model = Multi_VAE(
-    structures_dim = len(torch.load('./data{}/data_val/CMs.pt'.format(paper_path))[0,:]),
-    properties_dim = len(torch.load('./data{}/data_val/properties.pt'.format(paper_path))[0,:]),
+    structures_dim = len(torch.load('{}/data_val/CMs.pt'.format(paper_path))[0,:]),
+    properties_dim = len(torch.load('{}/data_val/properties.pt'.format(paper_path))[0,:]),
     latent_size = 21,
-    extra_dim = 32 - len(torch.load('./data{}/data_val/properties.pt'.format(paper_path))[0,:]),
+    extra_dim = 32 - len(torch.load('{}/data_val/properties.pt'.format(paper_path))[0,:]),
     initial_lr = 1e-3,
     properties_means = p_means,
     properties_stds = p_stds,
