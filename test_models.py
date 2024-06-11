@@ -25,7 +25,7 @@ norm_props = (properties - p_means)/p_stds
 properties_list =  ['eAT', 'eMBD', 'eXX', 'mPOL', 'eNN', 'eNE', 'eEE', 'eKIN', 'DIP', 'HLgap', 'HOMO_0', 'LUMO_0', 'HOMO_1', 'LUMO_1', 'HOMO_2', 'LUMO_2', 'dimension']
 p_arr = np.array(properties_list)
 
-PATH = "last.ckpt"
+PATH = "./our_models/checkpoints_128/last.ckpt"
 # "./models_saved/masked/epoch=2597-step=145487.ckpt"
 #
 #'./models_saved/masked/epoch=2597-step=145487.ckpt'
@@ -106,7 +106,7 @@ print("Cartesian coordinates:", cartesian)
 # Create the recovered ASE Atoms object
 rec_mol = Atoms(symbols=master_vec2, positions=cartesian)
 print("Recovered mol:")
-view(rec_mol)
+#view(rec_mol)
 # Get the RMSD between the original and recovered molecule
 #
 #
