@@ -68,6 +68,27 @@ def compute_rmsd(original, recovered):
     return rmsd_value
 
 
+def CM_2_xyz(CM):
+    """
+    Convert a Coulomb matrix to Cartesian coordinates.
+
+    Parameters:
+    CM (numpy.ndarray): The Coulomb matrix.
+
+    Returns:
+    numpy.ndarray: The Cartesian coordinates.
+    """
+    # Recover the distance matrix
+    distance_mat, master_vec = recover_distance_mat(CM)
+
+    # Recover the Cartesian coordinates
+    cartesian = cartesian_recovery(distance_mat)
+    cartesian = np.real(cartesian)
+    cartesian = cartesian[:, 0:3]
+
+    return cartesian
+
+
 if __name__ == "__main__":
     smiles = "CC(=O)OC1=CC=CC=C1C(=O)OC"
 

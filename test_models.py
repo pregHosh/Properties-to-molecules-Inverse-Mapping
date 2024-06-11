@@ -8,6 +8,9 @@ from torch.distributions.categorical import Categorical
 from tqdm import tqdm
 import copy
 from ase.visualize import view
+from invert_CM import *
+from CM_preparation import *
+from test_inversion import compute_rmsd, CM_2_xyz
 
 reproduce_paper = False
 
@@ -56,7 +59,6 @@ gm, labels = props_fit_Gaussian_mix(
     )
 
 
-
 # recall that here the target value is the normalized one
 
 generated = start_generation(
@@ -77,17 +79,16 @@ generated = start_generation(
 )
 
 
-
-
 # load the coulomb matrices in the dataset
 CMs = torch.load('./dati/data/CMs_total.pt'.format(paper_path))
 
 
 CM = generated[4]
 
-from invert_CM import *
-from CM_preparation import *
 
+print(CM_2_xyz(CM))
+
+exit()
 distance_mat, master_vec2 = recover_distance_mat(
     CM
 )
@@ -106,7 +107,7 @@ print("Cartesian coordinates:", cartesian)
 # Create the recovered ASE Atoms object
 rec_mol = Atoms(symbols=master_vec2, positions=cartesian)
 print("Recovered mol:")
-#view(rec_mol)
+# view(rec_mol)
 # Get the RMSD between the original and recovered molecule
 #
 #
