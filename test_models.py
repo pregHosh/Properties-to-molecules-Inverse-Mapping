@@ -82,7 +82,6 @@ generated = start_generation(
 # load the coulomb matrices in the dataset
 CMs = torch.load('./dati/data/CMs_total.pt'.format(paper_path))
 
-
 CM = generated[4]
 
 xyz = CM_2_xyz(CMs[4])
@@ -93,29 +92,3 @@ print(rec_xyz)
 
 error = compute_rmsd(rec_xyz, xyz)
 print("RMSD:", error)
-
-
-
-exit()
-distance_mat, master_vec2 = recover_distance_mat(
-    CM
-)
-
-
-print("Master Vector:", master_vec2)
-
-# Recover the Cartesian coordinates
-cartesian = cartesian_recovery(distance_mat)
-# truncate last two columns
-cartesian = cartesian[:,0:3]
-# remove imaginary part
-cartesian = np.real(cartesian)
-print("Cartesian coordinates:", cartesian)
-
-# Create the recovered ASE Atoms object
-rec_mol = Atoms(symbols=master_vec2, positions=cartesian)
-print("Recovered mol:")
-# view(rec_mol)
-# Get the RMSD between the original and recovered molecule
-#
-#
