@@ -79,8 +79,9 @@ generated = start_generation(
 )
 
 
-CM = generated[4]
-rec_xyz, master_vec = CM_2_xyz(CM)
-print("Master Vector:", master_vec)
-print("Cartesian coordinates shape:", rec_xyz.shape)
-print("Cartesian coordinates:\n", rec_xyz)
+
+for CM in generated:
+    rec_xyz, master_vec = CM_2_xyz(CM)
+    print("Master Vector:", master_vec)
+    print("Cartesian coordinates shape:", rec_xyz.shape)
+    print("Cartesian coordinates:\n", rec_xyz)

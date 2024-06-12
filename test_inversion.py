@@ -86,7 +86,7 @@ def CM_2_xyz(CM):
     cartesian = np.real(cartesian)
     cartesian = cartesian[:, 0:3]
 
-    return cartesian
+    return cartesian, master_vec
 
 
 if __name__ == "__main__":
@@ -143,4 +143,3 @@ if __name__ == "__main__":
     plt.ylabel("RMSD")
     plt.title("RMSD vs Noise Level")
     plt.show()
-    
