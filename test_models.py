@@ -14,6 +14,13 @@ from test_inversion import compute_rmsd, CM_2_xyz
 import os
 
 
+import os
+
+
+def create_directory(mod):
+    str_folder = "./str_{}".format(mod)
+    if not os.path.exists(str_folder):
+        os.mkdir(str_folder)
 
 
 def write_xyz_file(master_vector, cartesian_coordinates, output_file):
@@ -55,8 +62,6 @@ def write_xyz_file(master_vector, cartesian_coordinates, output_file):
             file.write(f"{element} {coord[0]} {coord[1]} {coord[2]}\n")
 
 
-
-
 reproduce_paper = False
 
 if reproduce_paper:
@@ -79,9 +84,7 @@ subfolders = ["checkpoints_128", "checkpoints_16_21", "checkpoints_256"]
 
 for mod in subfolders:
     
-    str_folder = "./str_{}".format(mod)
-    if not os.exist(str_folder):
-        os.mkdir(str_folder)
+    create_directory(mod)
 
 
     MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
