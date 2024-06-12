@@ -80,7 +80,7 @@ subfolders = ["checkpoints_128", "checkpoints_16_21", "checkpoints_256"]
 for mod in subfolders:
     
     str_folder = "./str_{}".format(mod)
-    if not os.exist(str_folder)
+    if not os.exist(str_folder):
         os.mkdir(str_folder)
 
 
