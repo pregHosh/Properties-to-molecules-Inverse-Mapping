@@ -92,14 +92,16 @@ p_arr = np.array(properties_list)
 
 
 # List all subfolders in ./out_models starting with the name "checkpoints_"
-subfolders = ["checkpoints_128", "checkpoints_16_21", "checkpoints_256"]
-dimensions = [128, 16, 256]
+subfolders = ["paper", "checkpoints_128", "checkpoints_256"]
+dimensions = [21, 128, 256]
 
 for dim, mod in zip(dimensions,subfolders):
 
     str_folder = create_directory(mod)
-
-    MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
+    if subfolders=="paper":
+        MODEL_PATH = "./models_saved/masked/epoch=2597-step=145487.ckpt"
+    else:
+        MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
 
     modello = Multi_VAE.load_from_checkpoint(
         MODEL_PATH,
