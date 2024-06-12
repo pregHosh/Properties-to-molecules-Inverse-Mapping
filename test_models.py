@@ -93,8 +93,9 @@ p_arr = np.array(properties_list)
 
 # List all subfolders in ./out_models starting with the name "checkpoints_"
 subfolders = ["checkpoints_128", "checkpoints_16_21", "checkpoints_256"]
+dimensions = [128, 16, 256]
 
-for mod in subfolders:
+for dim, mod in zip(dimensions,subfolders):
 
     str_folder = create_directory(mod)
 
@@ -105,7 +106,7 @@ for mod in subfolders:
         map_location=torch.device("cpu"),
         structures_dim=len(torch.load("./dati/data/data_val/CMs.pt")[0, :]),
         properties_dim=len(torch.load("./dati/data/data_val/properties.pt")[0, :]),
-        latent_size=128,
+        latent_size=dim,
         extra_dim=32 - len(torch.load("./dati/data/data_val/properties.pt")[0, :]),
         initial_lr=1e-3,
         properties_means=p_means,
