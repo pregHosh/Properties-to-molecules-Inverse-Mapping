@@ -92,9 +92,17 @@ p_arr = np.array(properties_list)
 
 
 # List all subfolders in ./out_models starting with the name "checkpoints_"
-subfolders = ["checkpoints_16_21", "paper", "checkpoints_128", "checkpoints_256"]
-dimensions = [16, 21, 128,256]
-extra_dimensions = [21, 32, 32, 32]
+subfolders = [
+    "checkpoints_16_32",
+    "checkpoints_128_64",
+    "checkpoints_16_21",
+    "paper",
+    "checkpoints_128",
+    "checkpoints_256",
+]
+#
+dimensions       = [16,128,16, 21, 128,256]
+extra_dimensions = [32, 64,21, 32, 32, 32]
 
 for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
 
