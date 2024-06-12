@@ -1,8 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import torch
 from molecular_generation_utils import *
 from invert_CM import *
-import torch
 from Model import Multi_VAE
 from torch.distributions.categorical import Categorical
 from tqdm import tqdm
@@ -14,13 +14,11 @@ from test_inversion import compute_rmsd, CM_2_xyz
 import os
 
 
-import os
-
-
 def create_directory(mod):
     str_folder = "./str_{}".format(mod)
     if not os.path.exists(str_folder):
         os.mkdir(str_folder)
+    return str_folder
 
 
 def write_xyz_file(master_vector, cartesian_coordinates, output_file):
@@ -37,20 +35,20 @@ def write_xyz_file(master_vector, cartesian_coordinates, output_file):
     """
     # Define a mapping of charges to elemental symbols
     charge_to_element = {
-        1: 'H',
-        5: 'B',
-        6: 'C',
-        7: 'N',
-        8: 'O',
-        9: 'F',
+        1: "H",
+        5: "B",
+        6: "C",
+        7: "N",
+        8: "O",
+        9: "F",
         # Add more elements as needed
     }
-    
+
     # Convert charges to elemental symbols
-    elements = [charge_to_element.get(charge, 'X') for charge in master_vector]
-    
+    elements = [charge_to_element.get(charge, "X") for charge in master_vector]
+
     # Write to XYZ file
-    with open(output_file, 'w') as file:
+    with open(output_file, "w") as file:
         num_atoms = len(elements)
         file.write(f"{num_atoms}\n")
         file.write("Molecule\n")
@@ -61,17 +59,35 @@ def write_xyz_file(master_vector, cartesian_coordinates, output_file):
 reproduce_paper = False
 
 if reproduce_paper:
-    paper_path = '_paper'
+    paper_path = "_paper"
 else:
-    paper_path = ''
+    paper_path = ""
 
 
-properties = torch.load('./dati/data/properties_total.pt'.format(paper_path))
+properties = torch.load("./dati/data/properties_total.pt".format(paper_path))
 p_means = torch.load("./dati/data/properties_means.pt".format(paper_path))
 p_stds = torch.load("./dati/data/properties_stds.pt".format(paper_path))
-norm_props = (properties - p_means)/p_stds
+norm_props = (properties - p_means) / p_stds
 
-properties_list =  ['eAT', 'eMBD', 'eXX', 'mPOL', 'eNN', 'eNE', 'eEE', 'eKIN', 'DIP', 'HLgap', 'HOMO_0', 'LUMO_0', 'HOMO_1', 'LUMO_1', 'HOMO_2', 'LUMO_2', 'dimension']
+properties_list = [
+    "eAT",
+    "eMBD",
+    "eXX",
+    "mPOL",
+    "eNN",
+    "eNE",
+    "eEE",
+    "eKIN",
+    "DIP",
+    "HLgap",
+    "HOMO_0",
+    "LUMO_0",
+    "HOMO_1",
+    "LUMO_1",
+    "HOMO_2",
+    "LUMO_2",
+    "dimension",
+]
 p_arr = np.array(properties_list)
 
 
@@ -80,12 +96,9 @@ subfolders = ["checkpoints_128", "checkpoints_16_21", "checkpoints_256"]
 
 for mod in subfolders:
 
-    create_directory(mod)
+    str_folder = create_directory(mod)
 
     MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
-    # "./models_saved/masked/epoch=2597-step=145487.ckpt"
-    #
-    #'./models_saved/masked/epoch=2597-step=145487.ckpt'
 
     modello = Multi_VAE.load_from_checkpoint(
         MODEL_PATH,
@@ -106,28 +119,23 @@ for mod in subfolders:
     modello.freeze()
 
     gm, labels = props_fit_Gaussian_mix(
-        norm_props,
-        min_components = 91, #91
-        max_components = 92 #92
-        )
+        norm_props, min_components=91, max_components=92  # 91  # 92
+    )
 
     # recall that here the target value is the normalized one
 
     generated = start_generation(
         modello,
-        {
-            'mPOL': 2.,
-            'eMBD': 2.
-        },
+        {"mPOL": 2.0, "eMBD": 2.0},
         p_arr,
         11,
         int(5e3),
         gm.means_,
         gm.covariances_,
-        cm_diff = 5,
-        deltaz = 6,
-        check_new_comp = False,
-        verbose = False
+        cm_diff=5,
+        deltaz=6,
+        check_new_comp=False,
+        verbose=False,
     )
 
     for ind, CM in enumerate(generated):
