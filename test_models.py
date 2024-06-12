@@ -38,15 +38,11 @@ def write_xyz_file(master_vector, cartesian_coordinates, output_file):
     # Define a mapping of charges to elemental symbols
     charge_to_element = {
         1: 'H',
-        2: 'He',
-        3: 'Li',
-        4: 'Be',
         5: 'B',
         6: 'C',
         7: 'N',
         8: 'O',
         9: 'F',
-        10: 'Ne',
         # Add more elements as needed
     }
     
@@ -83,9 +79,8 @@ p_arr = np.array(properties_list)
 subfolders = ["checkpoints_128", "checkpoints_16_21", "checkpoints_256"]
 
 for mod in subfolders:
-    
-    create_directory(mod)
 
+    create_directory(mod)
 
     MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
     # "./models_saved/masked/epoch=2597-step=145487.ckpt"
@@ -110,13 +105,11 @@ for mod in subfolders:
     modello.eval()
     modello.freeze()
 
-
     gm, labels = props_fit_Gaussian_mix(
         norm_props,
         min_components = 91, #91
         max_components = 92 #92
         )
-
 
     # recall that here the target value is the normalized one
 
@@ -137,12 +130,10 @@ for mod in subfolders:
         verbose = False
     )
 
-
     for ind, CM in enumerate(generated):
         rec_xyz, master_vec = CM_2_xyz(CM)
         print("Master Vector:", master_vec)
         print("Cartesian coordinates shape:", rec_xyz.shape)
         print("Cartesian coordinates:\n", rec_xyz)
 
-
-        write_xyz_file(master_vector, rec_xyz, str_folder + "/{}.xyz".format(ind))
+        write_xyz_file(master_vec, rec_xyz, str_folder + "/{}.xyz".format(ind))
