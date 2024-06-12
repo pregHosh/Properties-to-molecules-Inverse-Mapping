@@ -98,7 +98,7 @@ dimensions = [21, 128, 256]
 for dim, mod in zip(dimensions,subfolders):
 
     str_folder = create_directory(mod)
-    if subfolders=="paper":
+    if mod=="paper":
         MODEL_PATH = "./models_saved/masked/epoch=2597-step=145487.ckpt"
     else:
         MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
