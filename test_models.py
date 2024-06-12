@@ -92,8 +92,8 @@ p_arr = np.array(properties_list)
 
 
 # List all subfolders in ./out_models starting with the name "checkpoints_"
-subfolders = ["paper", "checkpoints_128", "checkpoints_256"]
-dimensions = [21, 128, 256]
+subfolders = ["checkpoints_16_21", "paper", "checkpoints_128", "checkpoints_256"]
+dimensions = [16, 21, 128,256]
 
 for dim, mod in zip(dimensions,subfolders):
 
@@ -124,8 +124,6 @@ for dim, mod in zip(dimensions,subfolders):
     gm, labels = props_fit_Gaussian_mix(
         norm_props, min_components=91, max_components=92  # 91  # 92
     )
-
-    # recall that here the target value is the normalized one
 
     generated = start_generation(
         modello,
