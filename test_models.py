@@ -136,7 +136,7 @@ for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
     modello.freeze()
 
 
-    generated = start_generation(
+    generated, ch_generated, positions_generated = start_generation(
         modello,
         {"mPOL": 2.0},
         p_arr,
@@ -144,11 +144,14 @@ for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
         int(5e3),
         gm.means_,
         gm.covariances_,
-        cm_diff=5,
-        deltaz=0.4,
+        cm_diff=1.0,
+        deltaz=20.0,
         check_new_comp=False,
-        verbose=False,
+        verbose=True,
     )
+    print("Generated:", len(generated))
+    print("Generated charges:", ch_generated)
+    print("Generated positions:", positions_generated)
 
     for ind, CM in enumerate(generated):
         rec_xyz, master_vec = CM_2_xyz(CM)

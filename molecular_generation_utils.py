@@ -123,7 +123,7 @@ def start_generation(
     if check_new_comp:
         registry_comp = torch.load('./special/registry_of_comp.pt')
         delta_comp_min = 0
-    samples = []
+    samples, samples_ch, samples_xyz = [], [],[]
 
     mus, Es, weights = best_fitted_conditional_distributions(
         trgt_idxs,
@@ -222,11 +222,13 @@ def start_generation(
             resized_CMs = torch.mul(resized_CMs, mask)
             reconstructed_CMs = resized_CMs[:,i,j]
             samples.append(reconstructed_CMs[0].tolist())
+            samples_ch.append(comp)
+            samples_xyz.append(pos)
         k+=1
         
         if k >=tolerance:
             break
         
     samples = torch.tensor(samples)
-    return samples[1::]
+    return samples[1::], samples_ch, samples_xyz
     
