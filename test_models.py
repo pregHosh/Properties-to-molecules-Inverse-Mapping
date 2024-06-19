@@ -15,7 +15,7 @@ import os
 
 
 def create_directory(mod):
-    str_folder = "./str_{}".format(mod)
+    str_folder = "./structure/str_{}".format(mod)
     if not os.path.exists(str_folder):
         os.mkdir(str_folder)
     return str_folder
@@ -94,20 +94,19 @@ p_arr = np.array(properties_list)
 # List all subfolders in ./out_models starting with the name "checkpoints_"
 subfolders = [
     "checkpoints_16_32",
-    "checkpoints_128_64",
     "checkpoints_16_21",
     "paper",
     "checkpoints_128",
     "checkpoints_256",
 ]
 #
-dimensions       = [16,128,16, 21, 128,256]
-extra_dimensions = [32, 64,21, 32, 32, 32]
+dimensions =      [16, 16, 21, 128, 256]
+extra_dimensions = [32, 21, 32, 32, 32]
 
 for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
 
     str_folder = create_directory(mod)
-    if mod=="paper":
+    if mod == "paper":
         MODEL_PATH = "./models_saved/masked/epoch=2597-step=145487.ckpt"
     else:
         MODEL_PATH = "./our_models/{}/last.ckpt".format(mod)
@@ -118,7 +117,8 @@ for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
         structures_dim=len(torch.load("./dati/data/data_val/CMs.pt")[0, :]),
         properties_dim=len(torch.load("./dati/data/data_val/properties.pt")[0, :]),
         latent_size=dim,
-        extra_dim=extra_dim - len(torch.load("./dati/data/data_val/properties.pt")[0, :]),
+        extra_dim=extra_dim
+        - len(torch.load("./dati/data/data_val/properties.pt")[0, :]),
         initial_lr=1e-3,
         properties_means=p_means,
         properties_stds=p_stds,
@@ -136,14 +136,14 @@ for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
 
     generated = start_generation(
         modello,
-        {"mPOL": 2.0, "eMBD": 2.0},
+        {"mPOL": 2.0},
         p_arr,
-        11,
+        100,
         int(5e3),
         gm.means_,
         gm.covariances_,
         cm_diff=5,
-        deltaz=6,
+        deltaz=0.4,
         check_new_comp=False,
         verbose=False,
     )
@@ -155,3 +155,20 @@ for dim, extra_dim, mod in zip(dimensions, extra_dimensions, subfolders):
         print("Cartesian coordinates:\n", rec_xyz)
 
         write_xyz_file(master_vec, rec_xyz, str_folder + "/{}.xyz".format(ind))
+
+        """
+        from ase import Atoms
+        from ase.io import write, read
+        from openbabel import openbabel as ob
+        mol = Atoms(symbols=master_vec, positions=rec_xyz)
+        obConversion.ReadFile(mol, "temp.xyz")
+        obConversion.WriteFile(mol, "temp.mol2")
+        obConversion = ob.OBConversion()
+        obConversion.SetInAndOutFormats("mol2", "xyz")
+        mol = ob.OBMol()
+        obConversion.ReadFile(mol, "temp.mol2")
+        mol.ConnectTheDots()
+        mol.PerceiveBondOrders()
+        mol.AddHydrogens()
+        obConversion.WriteFile(mol, "./temp.xyz")
+        """
