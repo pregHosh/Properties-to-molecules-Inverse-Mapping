@@ -170,7 +170,8 @@ def start_generation(
             pos, comp = get_cartesian(reconstructed_CMs[0,:].tolist())
             atoms = len(comp)
             atom = Atoms(comp, pos)
-            n_comp = get_connected(atom)
+            n_comp = 1
+            #get_connected(atom)
             if n_comp == 1:
                 if verbose:
                     print('okay, so I found a molecule...')
@@ -199,6 +200,8 @@ def start_generation(
                                 print('... and it is not very similar to the previous ones I found, so:')
                                 print('. {}th sample added'.format(l+2))
                             samples.append(reconstructed_CMs[0].tolist())
+                            samples_ch.append(comp)
+                            samples_xyz.append(pos)
                             l+=1
                         else:
                             if verbose:
@@ -222,8 +225,7 @@ def start_generation(
             resized_CMs = torch.mul(resized_CMs, mask)
             reconstructed_CMs = resized_CMs[:,i,j]
             samples.append(reconstructed_CMs[0].tolist())
-            samples_ch.append(comp)
-            samples_xyz.append(pos)
+  
         k+=1
         
         if k >=tolerance:
